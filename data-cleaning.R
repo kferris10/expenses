@@ -36,14 +36,14 @@ by_month <- dat %>%
   mutate(spending = paste(Reason, Amount, sep = ": $")) %>% 
   group_by(month, Category) %>% 
   summarise(Amount = sum(Amount), 
-            Reason = paste(spending, collapse = "\n")) %>% 
+            Reason = paste(spending, collapse = ", ")) %>% 
+  ungroup() %>% 
+  group_by(month) %>% 
+  arrange(Category) %>% 
+  mutate(tot_Amount = cumsum(Amount)) %>% 
   ungroup()
 
-gg <- ggplot(by_month, aes(month, Amount)) 
-gg <- gg + geom_area(aes(fill = Category), position = "stack")
-ggplotly(gg + scale_fill_brewer(type = "qual", palette = 2))
+save(by_month, file = "monthly-expenses.RData")
 
-# streamgraph
-by_month %>% 
-  rename(key = Category, value = Amount, date = month) %>% 
-  streamgraph()
+
+

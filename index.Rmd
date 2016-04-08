@@ -1,0 +1,40 @@
+---
+title: "Monthly Expenses"
+author: "Kevin"
+date: "April 7, 2016"
+output: html_document
+---
+
+```{r knitr_setup, echo = F}
+knitr::opts_chunk$set(echo = F, 
+                      message = F, 
+                      warning = F, 
+                      fig.width = 8, 
+                      fig.height = 5, 
+                      fig.align = "center")
+```
+
+```{r setup}
+library(dplyr)
+library(ggplot2)
+library(plotly)
+load("monthly-expenses.RData")
+```
+
+
+```{r expenses}
+gg <- ggplot(by_month, aes(month, Amount)) 
+gg <- gg + geom_area(aes(fill = Category), alpha = .7) + 
+  scale_fill_brewer(type = "qual", palette = 2)
+gg <- gg + theme(axis.title.y = element_text(vjust = .5))
+gg <- gg + 
+  theme(plot.background = element_rect(fill = "grey90"), 
+        panel.background = element_rect(fill = "grey90"), 
+        panel.grid.minor = element_blank(), 
+        panel.grid.major.y = element_line(colour = "grey75"), 
+        panel.grid.major.x = element_line(colour = "grey80"))
+
+ggplotly(gg)
+
+```
+
