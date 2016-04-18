@@ -43,7 +43,7 @@ by_month <- dat %>%
   mutate(tot_Amount = cumsum(Amount)) %>% 
   ungroup()
 
-save(by_month, file = "monthly-expenses.RData")
+save(dat, by_month, file = "monthly-expenses.RData")
 
 
 

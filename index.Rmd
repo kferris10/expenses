@@ -21,6 +21,7 @@ library(plotly)
 load("monthly-expenses.RData")
 ```
 
+## Monthly Expenses
 
 ```{r expenses}
 gg <- ggplot(by_month, aes(month, Amount)) 
@@ -36,5 +37,12 @@ gg <- gg +
 
 ggplotly(gg)
 
+```
+
+## All Expenses
+
+```{r all}
+qplot(Date, Amount, data = dat, colour = Category) %>% 
+  ggplotly()
 ```
 
