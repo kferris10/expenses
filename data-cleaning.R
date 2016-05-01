@@ -27,21 +27,55 @@ by_date <- dat %>%
 
 qplot(Date, Amount, data = by_date, colour = Category, geom = "line")
 
-# by month
-by_month <- dat %>% 
+# aggregate by month, category, Reason
+by_month_category_reason <- dat %>% 
   mutate(month = month(Date)) %>% 
   group_by(month, Category, Reason) %>% 
   summarise(Amount = round(sum(Amount))) %>% 
-  ungroup() %>% 
+  ungroup()
+
+# aggregate by month, category
+by_month_category <- by_month_category_reason %>% 
   mutate(spending = paste(Reason, Amount, sep = ": $")) %>% 
   group_by(month, Category) %>% 
   summarise(Amount = sum(Amount), 
             Reason = paste(spending, collapse = ", ")) %>% 
-  ungroup() %>% 
+  ungroup()
+
+# calculate the total amont spent each month
+by_month <- by_month_category %>% 
   group_by(month) %>% 
   arrange(Category) %>% 
   mutate(tot_Amount = cumsum(Amount)) %>% 
   ungroup()
+
+
+gg <- ggplot(by_month, aes(month, Amount)) 
+# dashed line for how much I make each month
+gg <- gg + 
+  geom_hline(yintercept = 1483.16 * 2, colour = "darkgrey", linetype = "dashed")
+
+# points for total amount spent by category
+# this allows me to create custom tooltips
+gg <- gg + 
+  geom_point(aes(y = tot_Amount, colour = Category, text = Reason), 
+             alpha = .5) + 
+  scale_colour_brewer(type = "qual", palette = 2, guide = F)
+
+# shaded area plot for expenses
+gg <- gg + 
+  geom_area(aes(fill = Category), alpha = .3) + 
+  scale_fill_brewer(type = "qual", palette = 2, guide = F)
+
+
+gg <- gg + theme_bw()
+gg <- gg + theme(
+  panel.grid = element_blank(), 
+  panel.border = element_blank()
+)
+# gg
+
+ggplotly(gg, tooltip = c("x", "y", "colour", "text"))
 
 save(dat, by_month, file = "monthly-expenses.RData")
 

@@ -1,7 +1,7 @@
 ---
 title: "Monthly Expenses"
 author: "Kevin"
-date: "April 7, 2016"
+date: "`r Sys.Date()`"
 output: html_document
 ---
 
@@ -25,17 +25,33 @@ load("monthly-expenses.RData")
 
 ```{r expenses}
 gg <- ggplot(by_month, aes(month, Amount)) 
-gg <- gg + geom_area(aes(fill = Category), alpha = .7) + 
-  scale_fill_brewer(type = "qual", palette = 2)
-gg <- gg + theme(axis.title.y = element_text(vjust = .5))
+# dashed line for how much I make each month
 gg <- gg + 
-  theme(plot.background = element_rect(fill = "grey90"), 
-        panel.background = element_rect(fill = "grey90"), 
-        panel.grid.minor = element_blank(), 
-        panel.grid.major.y = element_line(colour = "grey75"), 
-        panel.grid.major.x = element_line(colour = "grey80"))
+  geom_hline(yintercept = 1483.16 * 2, colour = "darkgrey", linetype = "dashed")
+gg <- gg + geom_text(aes(x = 2, y = 1483.16*2 + 50, 
+                          label = "Monthly Earnings"))
 
-ggplotly(gg)
+# points for total amount spent by category
+# this allows me to create custom tooltips
+gg <- gg + 
+  geom_point(aes(y = tot_Amount, colour = Category, text = Reason), 
+             alpha = .5) + 
+  scale_colour_brewer(type = "qual", palette = 2, guide = F)
+
+# shaded area plot for expenses
+gg <- gg + 
+  geom_area(aes(fill = Category), alpha = .3) + 
+  scale_fill_brewer(type = "qual", palette = 2, guide = F)
+
+
+gg <- gg + theme_bw()
+gg <- gg + theme(
+  panel.grid = element_blank(), 
+  panel.border = element_blank()
+)
+# gg
+
+ggplotly(gg, tooltip = c("x", "y", "colour", "text"))
 
 ```
 
