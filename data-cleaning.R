@@ -14,7 +14,8 @@ exp <- exp %>% gs_gs()
 dat <- exp %>% 
   gs_read() %>% 
   select(Date, Reason, Amount, Category) %>% 
-  mutate(Date = mdy(Date)) 
+  mutate(Date = ifelse(nchar(Date) <= 6, paste(Date, "/2016"), Date), 
+         Date = mdy(Date))
 
 qplot(Date, Amount, data = dat, colour = Category)
 
