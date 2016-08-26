@@ -18,10 +18,13 @@ knitr::opts_chunk$set(echo = F,
 library(dplyr)
 library(ggplot2)
 library(plotly)
+library(ggalt)
 load("monthly-expenses.RData")
 ```
 
 ## Monthly Expenses
+
+Aggregated by month.  This easily shows which months I spent the most money in.
 
 ```{r expenses}
 gg <- ggplot(by_month, aes(month, Amount)) 
@@ -55,10 +58,32 @@ ggplotly(gg, tooltip = c("x", "y", "colour", "text"))
 
 ```
 
+This plot helps us to see which categories I'm spending the most money in.  Clearly it's mostly Bills.  This is typically Rent and Utilities (~$1000).  Taxes also jumped in here though.  The car stuff was mostly one big repair and getting registered in Florida.
+
+```{r lollipop}
+gg2 <- ggplot(by_month, aes(Amount, Category)) + 
+  geom_lollipop(horizontal = TRUE, point.colour = "steelblue", 
+                point.size = 3, alpha = .7) + 
+  facet_wrap(~month)
+gg2 <- gg2 + theme_bw()
+gg2 <- gg2 + theme(panel.grid.minor = element_blank(), 
+                   panel.grid.major.y = element_blank())
+gg2 <- gg2 + theme(axis.line.y = element_blank(), 
+                   axis.ticks.y = element_blank())
+gg2 <- gg2 + theme(panel.border = element_blank())
+gg2 <- gg2 + theme(strip.background = element_rect(fill = "grey80", colour = NULL))
+gg2
+```
+
+
+
 ## All Expenses
 
+Whoops!  Clearly a data error in there.  I'll fix that eventually.
+
 ```{r all}
-qplot(Date, Amount, data = dat, colour = Category) %>% 
-  ggplotly()
+p <- qplot(Date, Amount, data = dat, colour = Category) + 
+  theme_bw()
+ggplotly(p)
 ```
 

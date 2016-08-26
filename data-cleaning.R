@@ -2,6 +2,7 @@
 library(dplyr)
 library(googlesheets)
 library(ggplot2)
+library(ggalt)
 library(lubridate)
 library(plotly)
 library(ggiraph)
@@ -77,6 +78,21 @@ gg <- gg + theme(
 # gg
 
 ggplotly(gg, tooltip = c("x", "y", "colour", "text"))
+
+# lollipop plot
+
+gg2 <- ggplot(by_month, aes(Amount, Category)) + 
+  geom_lollipop(horizontal = TRUE, point.colour = "steelblue", 
+                point.size = 3, alpha = .7) + 
+  facet_wrap(~month)
+gg2 <- gg2 + theme_bw()
+gg2 <- gg2 + theme(panel.grid.minor = element_blank(), 
+                   panel.grid.major.y = element_blank())
+gg2 <- gg2 + theme(axis.line.y = element_blank(), 
+                   axis.ticks.y = element_blank())
+gg2 <- gg2 + theme(panel.border = element_blank())
+gg2 <- gg2 + theme(strip.background = element_rect(fill = "grey80", colour = NULL))
+gg2
 
 save(dat, by_month, file = "monthly-expenses.RData")
 
