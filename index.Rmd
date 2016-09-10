@@ -79,7 +79,7 @@ gg2
 
 ## All Expenses
 
-Whoops!  Clearly a data error in there.  I'll fix that eventually.
+I'm pretty meh on this viz
 
 ```{r all}
 p <- qplot(Date, Amount, data = dat, colour = Category) + 
