@@ -55,7 +55,7 @@ by_month <- by_month_category %>%
 gg <- ggplot(by_month, aes(month, Amount)) 
 # dashed line for how much I make each month
 gg <- gg + 
-  geom_hline(yintercept = 1483.16 * 2, colour = "darkgrey", linetype = "dashed")
+  geom_hline(yintercept = 1468 * 2, colour = "darkgrey", linetype = "dashed")
 
 # points for total amount spent by category
 # this allows me to create custom tooltips
