@@ -27,7 +27,7 @@ load("monthly-expenses.RData")
 Aggregated by month.  This easily shows which months I spent the most money in.
 
 ```{r expenses}
-gg <- ggplot(by_month, aes(month, Amount)) 
+gg <- ggplot(by_month, aes(ym, Amount)) 
 # dashed line for how much I make each month
 gg <- gg + 
   geom_hline(yintercept = 1483.16 * 2, colour = "darkgrey", linetype = "dashed")
@@ -39,9 +39,10 @@ gg <- gg + geom_text(aes(x = 2, y = 1483.16*2 + 50,
 gg <- gg + 
   geom_point(aes(y = tot_Amount, colour = Category, text = Reason), 
              alpha = .5) + 
-  scale_colour_brewer(type = "qual", palette = 2, guide = F)
+  scale_colour_brewer(type = "qual", palette = 2, guide = F) + 
+  scale_x_discrete(name = "Date")
 
-# shaded area plot for expenses
+# shaded area plot♣ for expenses
 gg <- gg + 
   geom_area(aes(fill = Category), alpha = .3) + 
   scale_fill_brewer(type = "qual", palette = 2, guide = F)
@@ -50,7 +51,8 @@ gg <- gg +
 gg <- gg + theme_bw()
 gg <- gg + theme(
   panel.grid = element_blank(), 
-  panel.border = element_blank()
+  panel.border = element_blank(), 
+  axis.text.x = element_text(angle = 45, vjust = 0.5)
 )
 # gg
 
@@ -64,7 +66,7 @@ This plot helps us to see which categories I'm spending the most money in.  Clea
 gg2 <- ggplot(by_month, aes(Amount, Category)) + 
   geom_lollipop(horizontal = TRUE, point.colour = "steelblue", 
                 point.size = 3, alpha = .7) + 
-  facet_wrap(~month)
+  facet_wrap(~ym)
 gg2 <- gg2 + theme_bw()
 gg2 <- gg2 + theme(panel.grid.minor = element_blank(), 
                    panel.grid.major.y = element_blank())
